@@ -91,20 +91,20 @@
         }
     },
     // Display the overview page
-    displaySwitcheroos: function(){
+    displaySwitcheroos: function(fromSettings){
         console.log("Displaying all Switcheroos from the roo.switcheroos object")
         $('.switcheroos').html(""); // Clear existing..
         $.each(roo.switcheroos, function(id, switcheroo){
-            roo.appendSwitcheroo(id, switcheroo)
+            roo.appendSwitcheroo(id, switcheroo, fromSettings)
         });
         console.log(roo.switcheroos);
         $('#switcheroo, #settings').hide();
         $('#myswitcheroos').show();
     },
     // Append switcheroo details to the overview page
-    appendSwitcheroo: function(id, switcheroo){
-        console.log("appending", id, switcheroo)
-        if(switcheroo.inRange){
+    appendSwitcheroo: function(id, switcheroo, fromSettings){
+        console.log("appending", id, switcheroo, "and from settings?", fromSettings)
+        if(switcheroo.inRange && !fromSettings){
             $("#inrange").append("<div class='switcheroo' data-switcherooid='"+id+"'><div class='switcherooimagecontainer'><img src='"+switcheroo.image+"' class='switcherooimage'></div><div class='switcherooname'>"+(switcheroo.name || "Switcheroo")+"</div><div class='switcherooid'>"+id+"</div></div>");
         }else{
             $("#outofrange").append("<div class='switcheroo' data-switcherooid='"+id+"'><div class='switcherooimagecontainer'><img src='"+switcheroo.image+"' class='switcherooimage'></div><div class='switcherooname'>"+(switcheroo.name || "Switcheroo")+"</div><div class='switcherooid'>"+id+"</div></div>");
@@ -112,6 +112,7 @@
     },
     // Display a specific switcheroo on the page
     displaySwitcheroo: function(id){
+        clearTimeout(roo.scanTimer);
         roo.id = id;
         app.switcherooConnect();
         if(roo.history[roo.history.length-1] !== "switcheroo"){
@@ -276,9 +277,12 @@ var app = {
         }, function(e){
             console.log("Unable to scan for Switcheroos")
         });
-        setTimeout(function(){
-            roo.displaySwitcheroos();
-            $("#scan").text("Scan for Switcheroos");
+        roo.scanTimer = setTimeout(function(){
+            if(roo.history[roo.history.length-1] === "switcheroo"){
+                console.log("Showing switcheroos from localStorage");
+                roo.displaySwitcheroos(true);
+                $("#scan").text("Scan for Switcheroos");
+            }
         }, 5000)
     },
     // Connect to a Switcheroo
@@ -410,7 +414,7 @@ function handleBack(){
         console.log("need to show", page);
         roo.history.pop();
         if(page === "settings") roo.displaySwitcheroo(roo.id);
-        if(page === "switcheroo") roo.displaySwitcheroos(roo);
+        if(page === "switcheroo") roo.displaySwitcheroos();
     }
 }
 
