@@ -114,7 +114,9 @@
     displaySwitcheroo: function(id){
         roo.id = id;
         app.switcherooConnect();
-        roo.history.push("switcheroo");
+        if(roo.history[roo.history.length-1] !== "switcheroo"){
+            roo.history.push("switcheroo");
+        }
         console.log("Showing ", roo.id);
         $('#switcheroo > .topbar > .switcherooid').text(roo.switcheroos[roo.id].name || "Switcheroo");
 
@@ -122,11 +124,19 @@
         // First of all hide everything
         $('.switch').hide();
         var port = 1;
+
+        // If it's a new device
+        if(!roo.switcheroos[roo.id].ports){
+            roo.switcheroos[roo.id].name = "Unnamed Switcheroo";
+            roo.switcheroos[roo.id].ports = {};
+        }
         while(port <= 4){
-            console.log(roo.switcheroos[roo.id].ports);
-            if(!roo.switcheroos[roo.id].ports) roo.switcheroos[roo.id].ports = {};
-            if(!roo.switcheroos[roo.id].ports[port]) roo.switcheroos[roo.id].ports[port] = {};
-            console.log(roo.switcheroos[roo.id].ports[port].type);
+            // If we don't have settings for these ports..
+            if(!roo.switcheroos[roo.id].ports[port]){
+                roo.switcheroos[roo.id].ports[port] = {
+                    type: "toggle"
+                }
+            }
             if(roo.switcheroos[roo.id].ports[port].type === "toggle"){
                 console.log("showing port", port)
                 $('#port'+port + ' > .on').show();
@@ -135,14 +145,24 @@
             if(roo.switcheroos[roo.id].ports[port].type === "pulse"){
                 $('#port'+port + ' > .pulse').show();
             }
-            port++
+            port++;
         }
         $('#myswitcheroos, #settings').hide();
         $('#switcheroo').show();
+        ble.read(roo.id, "180a", "2a26", function(buffer){
+            var firmware = String.fromCharCode.apply(null, new Uint8Array(buffer));
+            console.log("Read Firmware", firmware);
+            roo.switcheroos[roo.id].firmware = firmware;
+        }, function(e){
+            console.log("Unable to read firmware from " +roo.id)
+        });
     },
     // Display the Settings page
     displaySettings: function(){
-        roo.history.push("settings");
+        if(roo.history[roo.history.length-1] !== "settings"){
+            roo.history.push("settings");
+        }
+        console.log("displaying Settings for ", roo.switcheroos[roo.id].name)
         $('.options .name').text(roo.switcheroos[roo.id].name);
         $('.options .image img').attr("src", roo.switcheroos[roo.id].image);
         var duration1 = roo.switcheroos[roo.id].ports[1].duration || "";
@@ -176,13 +196,13 @@
     saveName: function(result){
         // Save to object
         roo.switcheroos[roo.id].name = result.input1;
-        saveSettings();
+        roo.saveSettings();
         roo.displaySettings();
     },
     // Save an Image
     saveImage: function(imageData){
         roo.switcheroos[roo.id].image = "data:image/jpeg;base64," + imageData;
-        saveSettings();
+        roo.saveSettings();
         roo.displaySettings();
     },
     // Save change of an output
@@ -197,7 +217,7 @@
            roo.switcheroos[roo.id].ports[roo.port].duration = result.input1;
            roo.switcheroos[roo.id].ports[roo.port].type = "pulse";
         }
-        saveSettings();
+        roo.saveSettings();
         roo.displaySettings();
     },
     // Saves all settings to localStorage
@@ -208,6 +228,7 @@
         console.log("loading Settings")
         roo.switcheroos = JSON.parse(localStorage.getItem("switcheroos"));
         if(roo.switcheroos === "null") roo.switcheroos = {};
+        if(roo.switcheroos) console.log("Loaded ", roo.switcheroos)
     },
     // Create a blank history stack
     history: []
@@ -238,9 +259,10 @@ var app = {
     },
     // Scan for Switcheroos
     bleScan: function(){
-        console.log("beginning scan for switcheroos")
+        $("#scan").text("Scanning for Switcheroos");
+        console.log("beginning scan for Switcheroos")
         ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
-            console.log("roo.switcheroos", roo.switcheroos);
+            console.log("Scanned and found roo.switcheroos", switcheroo);
             if(roo.switcheroos[switcheroo.id]){
                 roo.switcheroos[switcheroo.id].inRange = true;
             }else{
@@ -252,22 +274,32 @@ var app = {
             console.log("connecting to ", switcheroo.id);
             roo.displaySwitcheroos();
         }, function(e){
-            handleError("Unable to scan for Switcheroos")
+            console.log("Unable to scan for Switcheroos")
         });
         setTimeout(function(){
             roo.displaySwitcheroos();
+            $("#scan").text("Scan for Switcheroos");
         }, 5000)
     },
     // Connect to a Switcheroo
     switcherooConnect: function(){
         console.log("Trrying to connect to ", roo.id)
         ble.connect(roo.id, app.switcherooConnected, function(e){
-            alert("Unable to connect to Switcheroo")
+            console.log("Unable to connect to Switcheroo");//cake
         });
         roo.saveSettings();
     },
-    switcherooConnected: function(){
-        console.log("Connected to a switcheroo", app.deviceID);
+    switcherooConnected: function(switcheroo){
+        console.log(switcheroo);
+        console.log("Connected to a switcheroo", roo.id);
+        // Get the Firmware # and store it.
+        ble.read(roo.id, "180a", "2a26", function(buffer){
+            var firmware = String.fromCharCode.apply(null, new Uint8Array(buffer));
+            console.log("Read Firmware", firmware);
+            roo.switcheroos[roo.id].firmware = firmware;
+        }, function(e){
+            handleError("Unable to read firmware from " +roo.id)
+        });
     },
     readSwitcherooID: function(deviceID){
         /*
@@ -287,9 +319,10 @@ var app = {
             data[0] = 0;
         }
         if(duration){
-            data[1] = duration;
+            data[1] = duration / 100;
         }
-        ble.writeWithoutResponse(app.deviceID, 
+        console.log("Writing state", state, "port", port, "duration", duration)
+        ble.writeWithoutResponse(roo.id, 
             roo.servicesAndCharacteristics[port].serviceID, 
             roo.servicesAndCharacteristics[port].characteristicID, 
             data.buffer, 
@@ -368,17 +401,16 @@ $("body").on("click", ".back", function(){
 });
 
 function handleBack(){
-    roo.history.pop();
     console.log("history", roo.history);
     console.log(roo.history.length);
     if(roo.history.length === 0){
-        console.log("herp");
-        roo.displaySwitcheroos();
+        navigator.app.exitApp();
     }else{
         var page = roo.history[roo.history.length-1];
         console.log("need to show", page);
         roo.history.pop();
-        if(page === "switcheroo") roo.displaySwitcheroo(roo.id);
+        if(page === "settings") roo.displaySwitcheroo(roo.id);
+        if(page === "switcheroo") roo.displaySwitcheroos(roo);
     }
 }
 
@@ -393,12 +425,14 @@ $("body").on("click", ".rooname", function(){
 });
 
 $("body").on("click", ".rooimage", function(){
-    camera.getPicture(
+    navigator.camera.getPicture(
         roo.saveImage, 
         function(){
             alert("Error")
         }, 
-        {}
+        {
+            destinationType: Camera.DestinationType.DATA_URL
+        }
     )
 });
 
@@ -406,7 +440,7 @@ $("body").on("click", ".roooutput", function(){
     roo.port = $(this).data("port");
     console.log(roo.port);
     navigator.notification.prompt(
-        "Leave as 0 to toggle", 
+        "Duration to stay on in Milliseconds.  Leave as 0 to toggle", 
         roo.saveOutput, 
         "Switheroo Output Setting",
         false,

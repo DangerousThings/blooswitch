@@ -111,6 +111,7 @@ h1 {
 }
 .switcherooimage{
     max-width:90%;
+    max-height:100%;
 }
 .switcheroo > .switcherooid{
     font-size:50%;
