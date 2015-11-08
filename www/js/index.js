@@ -166,16 +166,18 @@
         console.log("displaying Settings for ", roo.switcheroos[roo.id].name)
         $('.options .name').text(roo.switcheroos[roo.id].name);
         $('.options .image img').attr("src", roo.switcheroos[roo.id].image);
-        var duration1 = roo.switcheroos[roo.id].ports[1].duration || "";
-        console.log(duration1);
-        $('.output1').text(roo.switcheroos[roo.id].ports[1].type +" "+ duration1);
-        var duration2 = roo.switcheroos[roo.id].ports[2].duration || "";
-        console.log(roo.switcheroos[roo.id].ports[2].type +" "+ duration2);
-        $('.output2').text(roo.switcheroos[roo.id].ports[2].type +" "+ duration2);
-        var duration3 = roo.switcheroos[roo.id].ports[3].duration || "";
-        $('.output3').text(roo.switcheroos[roo.id].ports[3].type +" "+ duration3);
-        var duration4 = roo.switcheroos[roo.id].ports[4].duration || "";
-        $('.output4').text(roo.switcheroos[roo.id].ports[4].type +" "+ duration4);
+        var port = 1;
+        while(port <= 4){
+            var duration = roo.switcheroos[roo.id].ports[port].duration;
+            if(duration){
+                duration = duration +"ms"
+            }
+            else{
+                duration = "";
+            }
+            $('.output'+port).text(roo.switcheroos[roo.id].ports[port].type +" "+ duration);
+            port++;
+        }
         $('.settings .firmware').text(roo.switcheroos[roo.id].firmware);
         $('#switcheroo').hide();
         $('#settings').show();

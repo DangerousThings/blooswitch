@@ -182,7 +182,7 @@ h1 {
     position:relative;
 }
 .setting > .value{
-    color:lightgrey;
+    color:grey;
 }
 
 .setting > .label{
