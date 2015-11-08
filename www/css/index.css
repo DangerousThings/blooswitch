@@ -132,7 +132,7 @@ h1 {
     margin-bottom:10px;
 }
 
-.switches > .port > .switch{
+.switches > .port > .switch, #scan{
     width:150px;
     margin:10px 0px 10px 0px;
     background-color:#076074;
@@ -196,4 +196,14 @@ h1 {
     right:5px;
     text-align:right;
     overflow:hidden;
+}
+.image{
+    position:relative !important;
+}
+.image > img{
+    width:100%;
+}
+
+#scan{
+    width:100%;
 }
