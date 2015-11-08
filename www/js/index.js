@@ -18,7 +18,7 @@
  */
 
  var roo = {
-    load: function(){
+    loadFake: function(){
         // return localStorage.getItem("switcheroos");
         // This is just some test data I can work from..
         return {
@@ -92,6 +92,7 @@
     },
     // Display the overview page
     displaySwitcheroos: function(){
+        console.log("Displaying all Switcheroos from the roo.switcheroos object")
         $('.switcheroos').html(""); // Clear existing..
         $.each(roo.switcheroos, function(id, switcheroo){
             roo.appendSwitcheroo(id, switcheroo)
@@ -111,10 +112,11 @@
     },
     // Display a specific switcheroo on the page
     displaySwitcheroo: function(id){
-        roo.history.push("switcheroo");
         roo.id = id;
+        app.switcherooConnect();
+        roo.history.push("switcheroo");
         console.log("Showing ", roo.id);
-        $('#switcheroo > .topbar > .switcherooid').text(roo.switcheroos[roo.id].name);
+        $('#switcheroo > .topbar > .switcherooid').text(roo.switcheroos[roo.id].name || "Switcheroo");
 
         // Show On / Off / Pulse depending on the setting..
         // First of all hide everything
@@ -122,6 +124,8 @@
         var port = 1;
         while(port <= 4){
             console.log(roo.switcheroos[roo.id].ports);
+            if(!roo.switcheroos[roo.id].ports) roo.switcheroos[roo.id].ports = {};
+            if(!roo.switcheroos[roo.id].ports[port]) roo.switcheroos[roo.id].ports[port] = {};
             console.log(roo.switcheroos[roo.id].ports[port].type);
             if(roo.switcheroos[roo.id].ports[port].type === "toggle"){
                 console.log("showing port", port)
@@ -198,7 +202,12 @@
     },
     // Saves all settings to localStorage
     saveSettings: function(){
-        console.log("STILL TODO") // cake
+        localStorage.setItem("switcheroos", JSON.stringify(roo.switcheroos));
+    },
+    loadSettings: function(){
+        console.log("loading Settings")
+        roo.switcheroos = JSON.parse(localStorage.getItem("switcheroos"));
+        if(roo.switcheroos === "null") roo.switcheroos = {};
     },
     // Create a blank history stack
     history: []
@@ -229,19 +238,33 @@ var app = {
     },
     // Scan for Switcheroos
     bleScan: function(){
+        console.log("beginning scan for switcheroos")
         ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
-            console.log("connecting to ", switcheroo.id)
-            app.switcherooConnect(switcheroo.id);
+            console.log("roo.switcheroos", roo.switcheroos);
+            if(roo.switcheroos[switcheroo.id]){
+                roo.switcheroos[switcheroo.id].inRange = true;
+            }else{
+                // Create new switcheroo!
+                roo.switcheroos[switcheroo.id] = {};
+                roo.switcheroos[switcheroo.id].inRange = true;
+            }
+            roo.saveSettings();
+            console.log("connecting to ", switcheroo.id);
+            roo.displaySwitcheroos();
         }, function(e){
             handleError("Unable to scan for Switcheroos")
         });
+        setTimeout(function(){
+            roo.displaySwitcheroos();
+        }, 5000)
     },
     // Connect to a Switcheroo
-    switcherooConnect: function(deviceID){
-        app.deviceID = deviceID;
-        ble.connect(app.deviceID, app.switcherooConnected, function(e){
+    switcherooConnect: function(){
+        console.log("Trrying to connect to ", roo.id)
+        ble.connect(roo.id, app.switcherooConnected, function(e){
             alert("Unable to connect to Switcheroo")
         });
+        roo.saveSettings();
     },
     switcherooConnected: function(){
         console.log("Connected to a switcheroo", app.deviceID);
@@ -285,6 +308,7 @@ if(window.navigator.platform === "Win32"){
     // TODO use device specific ops
     fakeData();
 }else{
+    roo.loadSettings();
     app.initialize();
 }
 
@@ -324,8 +348,8 @@ $("body").on("click", "#myswitcheroos .switcheroo", function(){
 function fakeData(){
     console.log("Faking data for web browser development");
     console.log(roo);
-    roo.switcheroos = roo.load();
-    roo.displaySwitcheroos(roo.switcheroos);
+    roo.switcheroos = roo.loadFake();
+    roo.displaySwitcheroos();
 }
 
 $("body").on("click", ".topbar > .settings", function(){
@@ -349,7 +373,7 @@ function handleBack(){
     console.log(roo.history.length);
     if(roo.history.length === 0){
         console.log("herp");
-        roo.displaySwitcheroos(roo.switcheroos);
+        roo.displaySwitcheroos();
     }else{
         var page = roo.history[roo.history.length-1];
         console.log("need to show", page);
