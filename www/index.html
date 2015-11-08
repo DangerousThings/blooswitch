@@ -15,7 +15,7 @@
     "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
      KIND, either express or implied.  See the License for the
     specific language governing permissions and limitations
-    under the License.
+    under the Licensede.
 -->
 <html>
     <head>
@@ -37,15 +37,80 @@
     </head>
     <body>
         <div class="app">
-            <div class='switches'>
-                <button class='switch' data-type="on" data-port="1">Turn On Port 1</button>
-                <button class='switch' data-type="off" data-port="1">Turn Off Port 1</button>
-                <button class='switch' data-type="on"data-port="2">Turn On Port 2</button>
-                <button class='switch' data-type="off" data-port="2">Turn Off Port 2</button>
-                <button class='switch' data-type="on"data-port="3">Turn On Port 3</button>
-                <button class='switch' data-type="off" data-port="3">Turn Off Port 3</button>
-                <button class='switch' data-type="on"data-port="4">Turn On Port 4</button>
-                <button class='switch' data-type="off" data-port="4">Turn Off Port 4</button>
+            <div id="myswitcheroos">
+                <p>MY SWITCHEROOS</p>
+                <div class='range'>IN RANGE</div>
+                <div id="switcheroosInRange" class="switcheroos"></div>
+                <div class='range'>OUT OF RANGE</div>
+            </div>
+            <div id='switcheroo'>
+                <div class='topbar'>
+                    <div class='back'><</div>
+                    <div class='switcherooid'></div>
+                    <div class='settings'>&#9881;</div>
+                </div>
+                <div class='switches'>
+                    <div class='port' id='port1'>
+                        <button class='switch pulse' data-type="pulse" data-port="1">Pulse Port 1</button>
+                        <button class='switch on' data-type="on" data-port="1">Turn On Port 1</button>
+                        <button class='switch off' data-type="off" data-port="1">Turn Off Port 1</button>
+                    </div>
+                    <div class='port' id='port2'>
+                        <button class='switch pulse' data-type="pulse" data-port="2">Pulse Port 2</button>
+                        <button class='switch on' data-type="on" data-port="2">Turn On Port 2</button>
+                        <button class='switch off' data-type="off" data-port="2">Turn Off Port 2</button>
+                    </div>
+                    <div class='port' id='port3'>
+                        <button class='switch pulse' data-type="pulse" data-port="3">Pulse Port 3</button>
+                        <button class='switch on' data-type="on" data-port="3">Turn On Port 3</button>
+                        <button class='switch off' data-type="off" data-port="3">Turn Off Port 3</button>
+                    </div>
+                    <div class='port' id='port4'>
+                        <button class='switch pulse' data-type="pulse" data-port="4">Pulse Port 4</button>
+                        <button class='switch on' data-type="on" data-port="4">Turn On Port 4</button>
+                        <button class='switch off' data-type="off" data-port="4">Turn Off Port 4</button>
+                    </div>
+                </div>
+            </div>
+            <div class='settings' id='settings'>
+                <div class='topbar'>
+                    <div class='back'><</div>
+                    <div class='title'>SETTINGS</div>
+                    <div class='delete'>&#10060;</div>
+                </div>
+                <div class='options'>
+                    <div class='rooname setting'>
+                        <div class='label'>NAME</div>
+                        <div class='name value'></div>
+                    </div>
+                    <div class='rooimage setting'>
+                        <div class='label'>IMAGE</div>
+                        <div class='image value'></div>
+                    </div>
+                </div>
+                <div class='outputs'>OUTPUTS</div>
+                <div class='roooutput1 setting'>
+                    <div class='label'>Output 1</div>
+                    <div class='output1 value'></div>
+                </div>
+                <div class='roooutput2 setting'>
+                    <div class='label'>Output 2</div>
+                    <div class='output2 value'></div>
+                </div>
+                <div class='roooutput3 setting'>
+                    <div class='label'>Output 3</div>
+                    <div class='output3 value'></div>
+                </div>
+                <div class='roooutput3 setting'>
+                    <div class='label'>Output 3</div>
+                    <div class='output3 value'></div>
+                </div>
+                <div class='firmwaretitle'>FIRMWARE</div>
+                <div class='setting'>
+                    <div class='label'>Current Version</div>
+                    <div class='firmware value'>Firmware</div>
+                </div>
+
             </div>
         </div>
         <script type="text/javascript" src="js/jquery.js"></script>
@@ -53,3 +118,4 @@
         <script type="text/javascript" src="js/index.js"></script>
     </body>
 </html>
+

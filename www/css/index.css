@@ -24,48 +24,27 @@ body {
     -webkit-touch-callout: none;                /* prevent callout to copy image, etc when tap to hold */
     -webkit-text-size-adjust: none;             /* prevent webkit from resizing text to fit */
     -webkit-user-select: none;                  /* prevent copy paste, to allow, change 'none' to 'text' */
-    background-color:#E4E4E4;
-    background-image:linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-ms-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
-    background-image:-webkit-gradient(
-        linear,
-        left top,
-        left bottom,
-        color-stop(0, #A7A7A7),
-        color-stop(0.51, #E4E4E4)
-    );
+    background-color:#086b81;
     background-attachment:fixed;
-    font-family:'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
-    font-size:12px;
     height:100%;
     margin:0px;
     padding:0px;
     text-transform:uppercase;
     width:100%;
+    font-family: 'Lato', Fallback, sans-serif;
+    color: #fff;
+    text-align:center;
 }
 
 /* Portrait layout (default) */
 .app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
-    position:absolute;             /* position in the center of the screen */
-    left:50%;
-    top:50%;
-    height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
-    text-align:center;
-    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
-    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
+    
 }
 
 /* Landscape layout (with min-width) */
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {
-        background-position:left center;
-        padding:75px 0px 75px 170px;  /* padding-top + padding-bottom + text area = image height */
-        margin:-90px 0px 0px -198px;  /* offset vertical: half of image height */
-                                      /* offset horizontal: half of image width and text area width */
+
     }
 }
 
@@ -113,12 +92,108 @@ h1 {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
 }
-.switcherooblue{
-    background-color:#086b81;
+
+#settings, #switcheroo{
+    display:none;
 }
-.switcheroopink{
-    background-color:#d73b86;
+
+ @font-face {
+    font-family: 'Lato';
+    src: url('../font/Lato-Light.ttf')  format('truetype') /* Safari, Android, iOS */
 }
-.switcheroogreen{
-    background-color:#4fa414;
+
+.switcheroo{
+    text-align:center;
+    display:inline-block;
+    width:150px;
+    height:150px;
+    margin:10px;
+}
+.switcherooimage{
+    max-width:90%;
+}
+.switcheroo > .switcherooid{
+    font-size:50%;
+}
+.switcherooimagecontainer{
+    background:#fff;
+    padding:20px;
+    height:100px;
+}
+
+.range, .outputs, .firmwaretitle{
+    margin:10px 0px 10px 0px;
+    width:100%;
+    background-color:#076074;
+    padding:10px 0px 10px 0px;
+}
+.switches > .port{
+    display:block;
+    margin-bottom:10px;
+}
+
+.switches > .port > .switch{
+    width:150px;
+    margin:10px 0px 10px 0px;
+    background-color:#076074;
+    padding:10px 0px 10px 0px;
+    color:#fff;
+}
+
+.topbar{
+    background-color:#076074;
+    width:100%;
+    height:40px;
+    position:relative;
+}
+
+.topbar > .back, .topbar > .settings, .topbar > .delete{
+    color:#fff;
+    position:absolute;
+    top:0;
+    font-size:180%;
+    cursor:pointer;
+}
+
+.topbar > .delete{
+    margin-top:5px;
+    font-size:140%;
+}
+
+.topbar > .back{
+    left:10px;
+}
+
+.topbar > .settings, .topbar > .delete{
+    right:10px;
+}
+
+.topbar > .switcherooid, .topbar > .title{
+    padding-top:10px;
+}
+
+.setting{
+    text-align:left;
+    width:100%;
+    color:black;
+    background-color:#fff;
+    border-bottom:1px solid lightgrey;
+    position:relative;
+}
+.setting > .value{
+    color:lightgrey;
+}
+
+.setting > .label{
+    padding:5px;
+    width:50%;
+    
+}
+
+.setting > .value{
+    position:absolute;
+    top:5px;
+    right:5px;
+    text-align:right;
+    overflow:hidden;
 }
