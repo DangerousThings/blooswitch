@@ -104,6 +104,7 @@
     // Append switcheroo details to the overview page
     appendSwitcheroo: function(id, switcheroo, fromSettings){
         console.log("appending", id, switcheroo, "and from settings?", fromSettings)
+        if(!switcheroo.image) switcheroo.image = "img/board.png";
         if(switcheroo.inRange && !fromSettings){
             $("#inrange").append("<div class='switcheroo' data-switcherooid='"+id+"'><div class='switcherooimagecontainer'><img src='"+switcheroo.image+"' class='switcherooimage'></div><div class='switcherooname'>"+(switcheroo.name || "Switcheroo")+"</div><div class='switcherooid'>"+id+"</div></div>");
         }else{
@@ -130,6 +131,7 @@
         if(!roo.switcheroos[roo.id].ports){
             roo.switcheroos[roo.id].name = "Unnamed Switcheroo";
             roo.switcheroos[roo.id].ports = {};
+            roo.switcheroos[roo.id].image = "img/board.png";
         }
         while(port <= 4){
             // If we don't have settings for these ports..
@@ -262,6 +264,7 @@ var app = {
     },
     // Scan for Switcheroos
     bleScan: function(){
+        $('.search').addClass("searching");''
         $("#scan").text("Scanning for Switcheroos");
         console.log("beginning scan for Switcheroos")
         ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
@@ -273,6 +276,8 @@ var app = {
                 roo.switcheroos[switcheroo.id] = {};
                 roo.switcheroos[switcheroo.id].inRange = true;
             }
+            $("#scan").text("Scan for Switcheroos");
+            $(".search").removeClass("searching");
             roo.saveSettings();
             console.log("connecting to ", switcheroo.id);
             roo.displaySwitcheroos();
@@ -284,6 +289,7 @@ var app = {
                 console.log("Showing switcheroos from localStorage");
                 roo.displaySwitcheroos(true);
                 $("#scan").text("Scan for Switcheroos");
+                $(".search").removeClass("searching");
             }
         }, 5000)
     },
