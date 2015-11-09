@@ -280,11 +280,13 @@ var app = {
         })
         ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
             roo.switcheroos[switcheroo.id].inRange = true;
-            roo.displaySwitcheroos(false, true);
         }, function(e){
             console.log("Unable to scan for Switcheroos")
         });
-        roo.displaySwitcheroos(false, true);
+        setTimeout(function(){
+            roo.displaySwitcheroos(false, true);
+        }, 5100);
+        
     },
     // Scan for Switcheroos
     bleScan: function(){
