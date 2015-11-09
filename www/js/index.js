@@ -18,6 +18,7 @@
  */
 
  var roo = {
+    connected: [],
     loadFake: function(){
         // return localStorage.getItem("switcheroos");
         // This is just some test data I can work from..
@@ -91,15 +92,18 @@
         }
     },
     // Display the overview page
-    displaySwitcheroos: function(fromSettings){
+    displaySwitcheroos: function(fromSettings, dontUpdateScreen){
         console.log("Displaying all Switcheroos from the roo.switcheroos object")
         $('.switcheroos').html(""); // Clear existing..
         $.each(roo.switcheroos, function(id, switcheroo){
+            console.log("appending", id, switcheroo, fromSettings)
             roo.appendSwitcheroo(id, switcheroo, fromSettings)
         });
         console.log(roo.switcheroos);
-        $('#switcheroo, #settings').hide();
-        $('#myswitcheroos').show();
+        if(!dontUpdateScreen){
+            $('#switcheroo, #settings').hide();
+            $('#myswitcheroos').show();
+        }
     },
     // Append switcheroo details to the overview page
     appendSwitcheroo: function(id, switcheroo, fromSettings){
@@ -114,6 +118,8 @@
     // Display a specific switcheroo on the page
     displaySwitcheroo: function(id){
         clearTimeout(roo.scanTimer);
+        $("#scan").text("Scan for Switcheroos");
+        $(".search").removeClass("searching");
         roo.id = id;
         app.switcherooConnect();
         if(roo.history[roo.history.length-1] !== "switcheroo"){
@@ -258,9 +264,27 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.bleScan();
+        setInterval(function(){
+            app.checkConnectivity()
+        }, 20000);
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
+    },
+    // Check connectivity of connected switcheroos
+    checkConnectivity: function(){
+        console.log("checking for connecvitiy");
+        // Go through each item in roo.connected;
+        $.each(roo.switcheroos, function(k,v){
+            roo.switcheroos[k].inRange = false;
+        })
+        ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
+            roo.switcheroos[switcheroo.id].inRange = true;
+            roo.displaySwitcheroos(false, true);
+        }, function(e){
+            console.log("Unable to scan for Switcheroos")
+        });
+        roo.displaySwitcheroos(false, true);
     },
     // Scan for Switcheroos
     bleScan: function(){
@@ -288,9 +312,10 @@ var app = {
             if(roo.history[roo.history.length-1] === "switcheroo"){
                 console.log("Showing switcheroos from localStorage");
                 roo.displaySwitcheroos(true);
-                $("#scan").text("Scan for Switcheroos");
-                $(".search").removeClass("searching");
             }
+            console.log("changing text back to scan for switcheroos")
+            $("#scan").text("Scan for Switcheroos");
+            $(".search").removeClass("searching");
         }, 5000)
     },
     // Connect to a Switcheroo
@@ -302,6 +327,7 @@ var app = {
         roo.saveSettings();
     },
     switcherooConnected: function(switcheroo){
+        roo.connected.push(roo.id);
         console.log(switcheroo);
         console.log("Connected to a switcheroo", roo.id);
         // Get the Firmware # and store it.
