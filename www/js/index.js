@@ -18,6 +18,7 @@
  */
 
  var roo = {
+    switcheroos: {},
     connected: [],
     loadFake: function(){
         // return localStorage.getItem("switcheroos");
@@ -236,9 +237,12 @@
         localStorage.setItem("switcheroos", JSON.stringify(roo.switcheroos));
     },
     loadSettings: function(){
-        console.log("loading Settings")
+        console.log("loading Settings");
         roo.switcheroos = JSON.parse(localStorage.getItem("switcheroos"));
-        if(roo.switcheroos === "null") roo.switcheroos = {};
+        // If we don't have any settings
+        if(roo.switcheroos === "null" || !roo.switcheroos){
+            roo.switcheroos = {}; // Create empty object
+        }
         if(roo.switcheroos) console.log("Loaded ", roo.switcheroos)
     },
     // Create a blank history stack
@@ -274,7 +278,8 @@ var app = {
     // Check connectivity of connected switcheroos
     checkConnectivity: function(){
         console.log("checking for connecvitiy");
-        // Go through each item in roo.connected;
+        if(!roo.switcheroos) return;
+        // Go through each item in roo.switcheroos;
         $.each(roo.switcheroos, function(k,v){
             roo.switcheroos[k].inRange = false;
         })
@@ -295,10 +300,12 @@ var app = {
         console.log("beginning scan for Switcheroos")
         ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
             console.log("Scanned and found roo.switcheroos", switcheroo);
+            console.log("roo.switcheroos", roo.switcheroos)
             if(roo.switcheroos[switcheroo.id]){
                 roo.switcheroos[switcheroo.id].inRange = true;
             }else{
                 // Create new switcheroo!
+                console.log("created new switcheroo!");
                 roo.switcheroos[switcheroo.id] = {};
                 roo.switcheroos[switcheroo.id].inRange = true;
             }
@@ -413,9 +420,14 @@ $("body").on("click", ".switches > .port > .switch", function(){
     }
 });
 
-$("body").on("click", "#myswitcheroos .switcheroo", function(){
+$("body").on("click", "#inrange .switcheroo", function(){
     var id = $(this).data("switcherooid");
     roo.displaySwitcheroo(id);
+});
+
+$("body").on("click", "#outofrange .switcheroo", function(){
+    console.log("trying to bring out of range device into range");
+    app.bleScan();
 });
 
 function fakeData(){
@@ -488,7 +500,7 @@ $("body").on("click", ".roooutput", function(){
     )
 });
 
-$("body").on("click", "#scan", function(){
+$("body").on("click", ".scanCont", function(){
     // Performing a scan
     app.bleScan();
 });
