@@ -111,7 +111,7 @@ h1 {
 }
 .switcherooimage{
     max-width:100%;
-    max-height:100%;
+    max-height:400px;
 }
 .switcheroo > .switcherooid{
     font-size:50%;
@@ -122,7 +122,7 @@ h1 {
     height:100px;
 }
 
-.range, .outputs, .firmwaretitle{
+.range, .outputs, .firmwaretitle, .actionstitle{
     margin:10px 0px 10px 0px;
     width:100%;
     background-color:#076074;
@@ -169,6 +169,11 @@ h1 {
     right:10px;
 }
 
+.settings > img{
+    height:30px;
+    margin-top:4px;
+}
+
 .topbar > .switcherooid, .topbar > .title{
     padding-top:10px;
 }
@@ -203,6 +208,7 @@ h1 {
 }
 .image > img{
     width:100%;
+    max-height:400px;
 }
 
 .scanCont{
