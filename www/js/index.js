@@ -122,7 +122,9 @@
         $("#scan").text("Scan for Switcheroos");
         $(".search").removeClass("searching");
         roo.id = id;
-        app.switcherooConnect();
+        $(".switch").attr("disabled", "disabled");
+        $(".switch").addClass("disabled");
+        if(!roo.fakeSwitcheroos) app.switcherooConnect();
         if(roo.history[roo.history.length-1] !== "switcheroo"){
             roo.history.push("switcheroo");
         }
@@ -159,13 +161,15 @@
         }
         $('#myswitcheroos, #settings').hide();
         $('#switcheroo').show();
-        ble.read(roo.id, "180a", "2a26", function(buffer){
-            var firmware = String.fromCharCode.apply(null, new Uint8Array(buffer));
-            console.log("Read Firmware", firmware);
-            roo.switcheroos[roo.id].firmware = firmware;
-        }, function(e){
-            console.log("Unable to read firmware from " +roo.id)
-        });
+        if(!roo.fakeSwitcheroos){
+            ble.read(roo.id, "180a", "2a26", function(buffer){
+                var firmware = String.fromCharCode.apply(null, new Uint8Array(buffer));
+                console.log("Read Firmware", firmware);
+                roo.switcheroos[roo.id].firmware = firmware;
+            }, function(e){
+                console.log("Unable to read firmware from " +roo.id)
+            });
+        }
     },
     // Display the Settings page
     displaySettings: function(){
@@ -268,9 +272,11 @@ var app = {
     // function, we must explicitly call 'app.receivedEvent(...);'
     onDeviceReady: function() {
         app.bleScan();
+        /*
         setInterval(function(){
             app.checkConnectivity()
         }, 20000);
+        */
     },
     // Update DOM on a Received Event
     receivedEvent: function(id) {
@@ -291,7 +297,6 @@ var app = {
         setTimeout(function(){
             roo.displaySwitcheroos(false, true);
         }, 5100);
-        
     },
     // Scan for Switcheroos
     bleScan: function(){
@@ -329,13 +334,25 @@ var app = {
     },
     // Connect to a Switcheroo
     switcherooConnect: function(){
+        $(".connectivity").text("Connecting");
         console.log("Trrying to connect to ", roo.id)
         ble.connect(roo.id, app.switcherooConnected, function(e){
-            console.log("Unable to connect to Switcheroo");//cake
+            $(".connectivity").text("Disconnected");
+            $(".connectivity").addClass("disconnected");
+            $(".switch").attr("disabled", "disabled");
+            $(".switch").addClass("disabled");
+            console.log("Unable to connect to Switcheroo OR disconnected from Switcheroo");//easter egg
+            // NMote that connect failure event fires on disconnect too!
+            // Let's rescan and see what is available...
+            app.checkConnectivity();
         });
         roo.saveSettings();
     },
     switcherooConnected: function(switcheroo){
+        $(".switch").attr("disabled", false);
+        $(".switch").removeClass("disabled");
+        $(".connectivity").text("Connected");
+        $(".connectivity").removeClass("disconnected");
         roo.connected.push(roo.id);
         console.log(switcheroo);
         console.log("Connected to a switcheroo", roo.id);
@@ -434,6 +451,7 @@ function fakeData(){
     console.log("Faking data for web browser development");
     console.log(roo);
     roo.switcheroos = roo.loadFake();
+    roo.fakeSwitcheroos = true;
     roo.displaySwitcheroos();
 }
 

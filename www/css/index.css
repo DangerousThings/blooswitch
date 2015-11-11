@@ -122,7 +122,7 @@ h1 {
     height:100px;
 }
 
-.range, .outputs, .firmwaretitle, .actionstitle{
+.range, .outputs, .firmwaretitle, .actionstitle, .connectivity{
     margin:10px 0px 10px 0px;
     width:100%;
     background-color:#076074;
@@ -135,10 +135,11 @@ h1 {
 
 .switches > .port > .switch{
     width:150px;
-    margin:10px 0px 10px 0px;
-    background-color:#076074;w
-    padding:10px 0px 10px 0px;
+    margin:10px;
+    background-color:#076074;
+    padding:10px;
     color:#fff;
+    border:none;
 }
 
 .topbar{
@@ -247,4 +248,16 @@ h1 {
     -webkit-transform: rotate(180deg); 
     -moz-transform: rotate(180deg); 
     -o-transform: rotate(180deg);
+}
+
+.disconnected{
+    background-color:darkred;
+}
+
+.disabled{
+    background-color:gray !important;
+}
+
+.switch:active{
+    background-color:black !important;
 }
