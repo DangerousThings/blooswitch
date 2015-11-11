@@ -106,13 +106,16 @@ h1 {
     text-align:center;
     display:inline-block;
     width:150px;
-    height:150px;
+    min-height:150px;
     margin:10px;
+    vertical-align: top;
+
 }
 .switcherooimage{
     max-width:100%;
     max-height:100%;
 }
+
 .switcheroo > .switcherooid{
     font-size:50%;
 }
@@ -227,10 +230,7 @@ h1 {
     border-radius:0px;
     border-color: #076074;
     font-size:32px;
-    -webkit-transform: rotate(-45deg); 
-    -moz-transform: rotate(-45deg); 
-    -o-transform: rotate(-45deg);
-     transition:all 20s ease;
+    transition:all 20s ease;
 
 }
 #scan{
@@ -260,4 +260,9 @@ h1 {
 
 .switch:active{
     background-color:black !important;
+}
+
+.search > img{
+    width:20px;
+    padding: 6px 3px 3px 3px
 }
