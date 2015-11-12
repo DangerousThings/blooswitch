@@ -226,12 +226,13 @@
         // If it's a toggle setting
         console.log("save output result", result.input1);
         if(result.input1 === "0"){
-           roo.switcheroos[roo.id].ports[roo.port].duration = false;
-           roo.switcheroos[roo.id].ports[roo.port].type = "toggle";
+            roo.switcheroos[roo.id].ports[roo.port].duration = false;
+            roo.switcheroos[roo.id].ports[roo.port].type = "toggle";
         }
         if(result.input1 > 0){
-           roo.switcheroos[roo.id].ports[roo.port].duration = result.input1;
-           roo.switcheroos[roo.id].ports[roo.port].type = "pulse";
+            result.input1 = Math.ceil(result.input1/100)*100
+            roo.switcheroos[roo.id].ports[roo.port].duration = result.input1;
+            roo.switcheroos[roo.id].ports[roo.port].type = "pulse";
         }
         roo.saveSettings();
         roo.displaySettings();
