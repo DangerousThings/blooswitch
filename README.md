@@ -1,4 +1,4 @@
-# Switcheroo
+# BlooSwitch
 
     cordova platform add android
     

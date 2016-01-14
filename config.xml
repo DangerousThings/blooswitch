@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.switcherooboard" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>Switcheroo</name>
+<widget id="com.blooswitch" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>BlooSwitch</name>
     <description>
-        Switcheroo control app
+        BlooSwitch control app
     </description>
     <author email="john@mclear.co.uk" href="http://mclear.co.uk">
         John McLear

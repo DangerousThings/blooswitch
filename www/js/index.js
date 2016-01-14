@@ -18,10 +18,10 @@
  */
 
  var roo = {
-    switcheroos: {},
+    blooswitches: {},
     connected: [],
     loadFake: function(){
-        // return localStorage.getItem("switcheroos");
+        // return localStorage.getItem("blooswitches");
         // This is just some test data I can work from..
         return {
             "E1:8C:FB:02:D6:45":{
@@ -93,43 +93,43 @@
         }
     },
     // Display the overview page
-    displaySwitcheroos: function(fromSettings, dontUpdateScreen){
-        console.log("Displaying all Switcheroos from the roo.switcheroos object")
-        $('.switcheroos').html(""); // Clear existing..
-        $.each(roo.switcheroos, function(id, switcheroo){
-            console.log("appending", id, switcheroo, fromSettings)
-            roo.appendSwitcheroo(id, switcheroo, fromSettings)
+    displayBlooSwitches: function(fromSettings, dontUpdateScreen){
+        console.log("Displaying all BlooSwitches from the roo.blooswitches object")
+        $('.blooswitches').html(""); // Clear existing..
+        $.each(roo.blooswitches, function(id, blooswitch){
+            console.log("appending", id, blooswitch, fromSettings)
+            roo.appendBlooSwitch(id, blooswitch, fromSettings)
         });
-        console.log(roo.switcheroos);
+        console.log(roo.blooswitches);
         if(!dontUpdateScreen){
-            $('#switcheroo, #settings').hide();
-            $('#myswitcheroos').show();
+            $('#blooswitch, #settings').hide();
+            $('#myblooswitches').show();
         }
     },
-    // Append switcheroo details to the overview page
-    appendSwitcheroo: function(id, switcheroo, fromSettings){
-        console.log("appending", id, switcheroo, "and from settings?", fromSettings)
-        if(!switcheroo.image) switcheroo.image = "img/board.png";
-        if(switcheroo.inRange && !fromSettings){
-            $("#inrange").append("<div class='switcheroo' data-switcherooid='"+id+"'><div class='switcherooimagecontainer'><img src='"+switcheroo.image+"' class='switcherooimage'></div><div class='switcherooname'>"+(switcheroo.name || "Switcheroo")+"</div><div class='switcherooid'>"+id+"</div></div>");
+    // Append blooswitch details to the overview page
+    appendBlooSwitch: function(id, blooswitch, fromSettings){
+        console.log("appending", id, blooswitch, "and from settings?", fromSettings)
+        if(!blooswitch.image) blooswitch.image = "img/board.png";
+        if(blooswitch.inRange && !fromSettings){
+            $("#inrange").append("<div class='blooswitch' data-blooswitchid='"+id+"'><div class='blooswitchimagecontainer'><img src='"+blooswitch.image+"' class='blooswitchimage'></div><div class='blooswitchname'>"+(blooswitch.name || "BlooSwitch")+"</div><div class='blooswitchid'>"+id+"</div></div>");
         }else{
-            $("#outofrange").append("<div class='switcheroo' data-switcherooid='"+id+"'><div class='switcherooimagecontainer'><img src='"+switcheroo.image+"' class='switcherooimage'></div><div class='switcherooname'>"+(switcheroo.name || "Switcheroo")+"</div><div class='switcherooid'>"+id+"</div></div>");
+            $("#outofrange").append("<div class='blooswitch' data-blooswitchid='"+id+"'><div class='blooswitchimagecontainer'><img src='"+blooswitch.image+"' class='blooswitchimage'></div><div class='blooswitchname'>"+(blooswitch.name || "BlooSwitch")+"</div><div class='blooswitchid'>"+id+"</div></div>");
         }
     },
-    // Display a specific switcheroo on the page
-    displaySwitcheroo: function(id){
+    // Display a specific blooswitch on the page
+    displayBlooSwitch: function(id){
         clearTimeout(roo.scanTimer);
-        $("#scan").text("Scan for Switcheroos");
+        $("#scan").text("Scan for BlooSwitches");
         $(".search").removeClass("searching");
         roo.id = id;
         $(".switch").attr("disabled", "disabled");
         $(".switch").addClass("disabled");
-        if(!roo.fakeSwitcheroos) app.switcherooConnect();
-        if(roo.history[roo.history.length-1] !== "switcheroo"){
-            roo.history.push("switcheroo");
+        if(!roo.fakeBlooSwitches) app.blooswitchConnect();
+        if(roo.history[roo.history.length-1] !== "blooswitch"){
+            roo.history.push("blooswitch");
         }
         console.log("Showing ", roo.id);
-        $('#switcheroo > .topbar > .switcherooid').text(roo.switcheroos[roo.id].name || "Switcheroo");
+        $('#blooswitch > .topbar > .blooswitchid').text(roo.blooswitches[roo.id].name || "BlooSwitch");
 
         // Show On / Off / Pulse depending on the setting..
         // First of all hide everything
@@ -137,35 +137,35 @@
         var port = 1;
 
         // If it's a new device
-        if(!roo.switcheroos[roo.id].ports){
-            roo.switcheroos[roo.id].name = "Unnamed Switcheroo";
-            roo.switcheroos[roo.id].ports = {};
-            roo.switcheroos[roo.id].image = "img/board.png";
+        if(!roo.blooswitches[roo.id].ports){
+            roo.blooswitches[roo.id].name = "Unnamed BlooSwitch";
+            roo.blooswitches[roo.id].ports = {};
+            roo.blooswitches[roo.id].image = "img/board.png";
         }
         while(port <= 4){
             // If we don't have settings for these ports..
-            if(!roo.switcheroos[roo.id].ports[port]){
-                roo.switcheroos[roo.id].ports[port] = {
+            if(!roo.blooswitches[roo.id].ports[port]){
+                roo.blooswitches[roo.id].ports[port] = {
                     type: "toggle"
                 }
             }
-            if(roo.switcheroos[roo.id].ports[port].type === "toggle"){
+            if(roo.blooswitches[roo.id].ports[port].type === "toggle"){
                 console.log("showing port", port)
                 $('#port'+port + ' > .on').show();
                 $('#port'+port + ' > .off').show();
             }
-            if(roo.switcheroos[roo.id].ports[port].type === "pulse"){
+            if(roo.blooswitches[roo.id].ports[port].type === "pulse"){
                 $('#port'+port + ' > .pulse').show();
             }
             port++;
         }
-        $('#myswitcheroos, #settings').hide();
-        $('#switcheroo').show();
-        if(!roo.fakeSwitcheroos){
+        $('#myblooswitches, #settings').hide();
+        $('#blooswitch').show();
+        if(!roo.fakeBlooSwitches){
             ble.read(roo.id, "180a", "2a26", function(buffer){
                 var firmware = String.fromCharCode.apply(null, new Uint8Array(buffer));
                 console.log("Read Firmware", firmware);
-                roo.switcheroos[roo.id].firmware = firmware;
+                roo.blooswitches[roo.id].firmware = firmware;
             }, function(e){
                 console.log("Unable to read firmware from " +roo.id)
             });
@@ -176,23 +176,23 @@
         if(roo.history[roo.history.length-1] !== "settings"){
             roo.history.push("settings");
         }
-        console.log("displaying Settings for ", roo.switcheroos[roo.id].name)
-        $('.options .name').text(roo.switcheroos[roo.id].name);
-        $('.options .image img').attr("src", roo.switcheroos[roo.id].image);
+        console.log("displaying Settings for ", roo.blooswitches[roo.id].name)
+        $('.options .name').text(roo.blooswitches[roo.id].name);
+        $('.options .image img').attr("src", roo.blooswitches[roo.id].image);
         var port = 1;
         while(port <= 4){
-            var duration = roo.switcheroos[roo.id].ports[port].duration;
+            var duration = roo.blooswitches[roo.id].ports[port].duration;
             if(duration){
                 duration = duration +"ms"
             }
             else{
                 duration = "";
             }
-            $('.output'+port).text(roo.switcheroos[roo.id].ports[port].type +" "+ duration);
+            $('.output'+port).text(roo.blooswitches[roo.id].ports[port].type +" "+ duration);
             port++;
         }
-        $('.settings .firmware').text(roo.switcheroos[roo.id].firmware);
-        $('#switcheroo').hide();
+        $('.settings .firmware').text(roo.blooswitches[roo.id].firmware);
+        $('#blooswitch').hide();
         $('#settings').show();
     },
     // Constant of Service IDs and Characteristics
@@ -202,22 +202,22 @@
         3: {serviceID: "00000015-9d7a-4919-b570-3bb24a4bf68e", characteristicID: "00000023-9d7a-4919-b570-3bb24a4bf68e"},
         4: {serviceID: "00000015-9d7a-4919-b570-3bb24a4bf68e", characteristicID: "00000024-9d7a-4919-b570-3bb24a4bf68e"}
     },
-    // delete a switcheroo from localstorage
+    // delete a blooswitch from localstorage
     delete: function(){
-        delete roo.switcheroos[roo.id];
-        console.log(roo.switcheroos);
-        roo.displaySwitcheroos();
+        delete roo.blooswitches[roo.id];
+        console.log(roo.blooswitches);
+        roo.displayBlooSwitches();
     },
-    // Save Name of switcheroo
+    // Save Name of blooswitch
     saveName: function(result){
         // Save to object
-        roo.switcheroos[roo.id].name = result.input1;
+        roo.blooswitches[roo.id].name = result.input1;
         roo.saveSettings();
         roo.displaySettings();
     },
     // Save an Image
     saveImage: function(imageData){
-        roo.switcheroos[roo.id].image = "data:image/jpeg;base64," + imageData;
+        roo.blooswitches[roo.id].image = "data:image/jpeg;base64," + imageData;
         roo.saveSettings();
         roo.displaySettings();
     },
@@ -226,29 +226,29 @@
         // If it's a toggle setting
         console.log("save output result", result.input1);
         if(result.input1 === "0"){
-            roo.switcheroos[roo.id].ports[roo.port].duration = false;
-            roo.switcheroos[roo.id].ports[roo.port].type = "toggle";
+            roo.blooswitches[roo.id].ports[roo.port].duration = false;
+            roo.blooswitches[roo.id].ports[roo.port].type = "toggle";
         }
         if(result.input1 > 0){
             result.input1 = Math.ceil(result.input1/100)*100
-            roo.switcheroos[roo.id].ports[roo.port].duration = result.input1;
-            roo.switcheroos[roo.id].ports[roo.port].type = "pulse";
+            roo.blooswitches[roo.id].ports[roo.port].duration = result.input1;
+            roo.blooswitches[roo.id].ports[roo.port].type = "pulse";
         }
         roo.saveSettings();
         roo.displaySettings();
     },
     // Saves all settings to localStorage
     saveSettings: function(){
-        localStorage.setItem("switcheroos", JSON.stringify(roo.switcheroos));
+        localStorage.setItem("blooswitches", JSON.stringify(roo.blooswitches));
     },
     loadSettings: function(){
         console.log("loading Settings");
-        roo.switcheroos = JSON.parse(localStorage.getItem("switcheroos"));
+        roo.blooswitches = JSON.parse(localStorage.getItem("blooswitches"));
         // If we don't have any settings
-        if(roo.switcheroos === "null" || !roo.switcheroos){
-            roo.switcheroos = {}; // Create empty object
+        if(roo.blooswitches === "null" || !roo.blooswitches){
+            roo.blooswitches = {}; // Create empty object
         }
-        if(roo.switcheroos) console.log("Loaded ", roo.switcheroos)
+        if(roo.blooswitches) console.log("Loaded ", roo.blooswitches)
     },
     // Create a blank history stack
     history: []
@@ -292,91 +292,91 @@ var app = {
     // Update DOM on a Received Event
     receivedEvent: function(id) {
     },
-    // Check connectivity of connected switcheroos
+    // Check connectivity of connected blooswitches
     checkConnectivity: function(){
         console.log("checking for connecvitiy");
-        if(!roo.switcheroos) return;
-        // Go through each item in roo.switcheroos;
-        $.each(roo.switcheroos, function(k,v){
-            roo.switcheroos[k].inRange = false;
+        if(!roo.blooswitches) return;
+        // Go through each item in roo.blooswitches;
+        $.each(roo.blooswitches, function(k,v){
+            roo.blooswitches[k].inRange = false;
         })
-        ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
-            roo.switcheroos[switcheroo.id].inRange = true;
+        ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(blooswitch){
+            roo.blooswitches[blooswitch.id].inRange = true;
         }, function(e){
-            console.log("Unable to scan for Switcheroos")
+            console.log("Unable to scan for BlooSwitches")
         });
         setTimeout(function(){
-            roo.displaySwitcheroos(false, true);
+            roo.displayBlooSwitches(false, true);
         }, 5100);
     },
-    // Scan for Switcheroos
+    // Scan for BlooSwitches
     bleScan: function(){
         $('.search').addClass("searching");''
-        $("#scan").text("Scanning for Switcheroos");
-        console.log("beginning scan for Switcheroos")
-        ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(switcheroo){
-            console.log("Scanned and found roo.switcheroos", switcheroo);
-            console.log("roo.switcheroos", roo.switcheroos)
-            if(roo.switcheroos[switcheroo.id]){
-                roo.switcheroos[switcheroo.id].inRange = true;
+        $("#scan").text("Scanning for BlooSwitches");
+        console.log("beginning scan for BlooSwitches")
+        ble.scan(["00000015-9d7a-4919-b570-3bb24a4bf68e"], 5, function(blooswitch){
+            console.log("Scanned and found roo.blooswitches", blooswitch);
+            console.log("roo.blooswitches", roo.blooswitches)
+            if(roo.blooswitches[blooswitch.id]){
+                roo.blooswitches[blooswitch.id].inRange = true;
             }else{
-                // Create new switcheroo!
-                console.log("created new switcheroo!");
-                roo.switcheroos[switcheroo.id] = {};
-                roo.switcheroos[switcheroo.id].inRange = true;
+                // Create new blooswitch!
+                console.log("created new blooswitch!");
+                roo.blooswitches[blooswitch.id] = {};
+                roo.blooswitches[blooswitch.id].inRange = true;
             }
-            $("#scan").text("Scan for Switcheroos");
+            $("#scan").text("Scan for BlooSwitches");
             $(".search").removeClass("searching");
             roo.saveSettings();
-            console.log("connecting to ", switcheroo.id);
-            roo.displaySwitcheroos();
+            console.log("connecting to ", blooswitch.id);
+            roo.displayBlooSwitches();
         }, function(e){
-            console.log("Unable to scan for Switcheroos")
+            console.log("Unable to scan for BlooSwitches")
         });
         roo.scanTimer = setTimeout(function(){
-            if(roo.history[roo.history.length-1] === "switcheroo"){
-                console.log("Showing switcheroos from localStorage");
-                roo.displaySwitcheroos(true);
+            if(roo.history[roo.history.length-1] === "blooswitch"){
+                console.log("Showing blooswitches from localStorage");
+                roo.displayBlooSwitches(true);
             }
-            console.log("changing text back to scan for switcheroos")
-            $("#scan").text("Scan for Switcheroos");
+            console.log("changing text back to scan for blooswitches")
+            $("#scan").text("Scan for BlooSwitches");
             $(".search").removeClass("searching");
         }, 5000)
     },
-    // Connect to a Switcheroo
-    switcherooConnect: function(){
+    // Connect to a BlooSwitch
+    blooswitchConnect: function(){
         $(".connectivity").text("Connecting");
         console.log("Trrying to connect to ", roo.id)
-        ble.connect(roo.id, app.switcherooConnected, function(e){
+        ble.connect(roo.id, app.blooswitchConnected, function(e){
             $(".connectivity").text("Disconnected");
             $(".connectivity").addClass("disconnected");
             $(".switch").attr("disabled", "disabled");
             $(".switch").addClass("disabled");
-            console.log("Unable to connect to Switcheroo OR disconnected from Switcheroo");//easter egg
+            console.log("Unable to connect to BlooSwitch OR disconnected from BlooSwitch");//easter egg
             // NMote that connect failure event fires on disconnect too!
             // Let's rescan and see what is available...
             app.checkConnectivity();
         });
         roo.saveSettings();
     },
-    switcherooConnected: function(switcheroo){
+    blooswitchConnected: function(blooswitch){
         $(".switch").attr("disabled", false);
         $(".switch").removeClass("disabled");
         $(".connectivity").text("Connected");
         $(".connectivity").removeClass("disconnected");
         roo.connected.push(roo.id);
-        console.log(switcheroo);
-        console.log("Connected to a switcheroo", roo.id);
+        console.log(blooswitch);
+        console.log("Connected to a blooswitch", roo.id);
         // Get the Firmware # and store it.
         ble.read(roo.id, "180a", "2a26", function(buffer){
             var firmware = String.fromCharCode.apply(null, new Uint8Array(buffer));
             console.log("Read Firmware", firmware);
-            roo.switcheroos[roo.id].firmware = firmware;
+            roo.blooswitches[roo.id].firmware = firmware;
         }, function(e){
             handleError("Unable to read firmware from " +roo.id)
         });
     },
-    readSwitcherooID: function(deviceID){
+    readBlooSwitchID: function(deviceID){
         /*
         ble.read(deviceID, "1800", "2a00", function(buffer){
             console.log("Read ID", String.fromCharCode.apply(null, new Uint8Array(buffer)));
@@ -437,7 +437,7 @@ $("body").on("click", ".switches > .port > .switch", function(){
     var port = $(this).data("port"); // 1-->4
     var id = roo.id;
     if(type === "pulse"){
-        var duration = roo.switcheroos[roo.id].ports[port].duration;
+        var duration = roo.blooswitches[roo.id].ports[port].duration;
         app.switchPort(type, port, duration)
     }
     if(type === "on"){
@@ -448,12 +448,12 @@ $("body").on("click", ".switches > .port > .switch", function(){
     }
 });
 
-$("body").on("click", "#inrange .switcheroo", function(){
-    var id = $(this).data("switcherooid");
-    roo.displaySwitcheroo(id);
+$("body").on("click", "#inrange .blooswitch", function(){
+    var id = $(this).data("blooswitchid");
+    roo.displayBlooSwitch(id);
 });
 
-$("body").on("click", "#outofrange .switcheroo", function(){
+$("body").on("click", "#outofrange .blooswitch", function(){
     console.log("trying to bring out of range device into range");
     app.bleScan();
 });
@@ -461,9 +461,9 @@ $("body").on("click", "#outofrange .switcheroo", function(){
 function fakeData(){
     console.log("Faking data for web browser development");
     console.log(roo);
-    roo.switcheroos = roo.loadFake();
-    roo.fakeSwitcheroos = true;
-    roo.displaySwitcheroos();
+    roo.blooswitches = roo.loadFake();
+    roo.fakeBlooSwitches = true;
+    roo.displayBlooSwitches();
 }
 
 $("body").on("click", ".topbar > .settings", function(){
@@ -472,7 +472,7 @@ $("body").on("click", ".topbar > .settings", function(){
 });
 
 $("body").on("click", ".delete", function(){
-    console.log("deleting switcheroo", roo.id);
+    console.log("deleting blooswitch", roo.id);
     roo.delete(roo.id);
 });
 
@@ -490,14 +490,14 @@ function handleBack(){
         var page = roo.history[roo.history.length-1];
         console.log("need to show", page);
         roo.history.pop();
-        if(page === "settings") roo.displaySwitcheroo(roo.id);
-        if(page === "switcheroo") roo.displaySwitcheroos();
+        if(page === "settings") roo.displayBlooSwitch(roo.id);
+        if(page === "blooswitch") roo.displayBlooSwitches();
     }
 }
 
 $("body").on("click", ".rooname", function(){
     navigator.notification.prompt(
-        "Provide a new Switcheroo name", 
+        "Provide a new BlooSwitch name",
         roo.saveName, 
         "New Switheroo name",
         false,
