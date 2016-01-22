@@ -499,7 +499,7 @@ $("body").on("click", ".rooname", function(){
     navigator.notification.prompt(
         "Provide a new BlooSwitch name",
         roo.saveName, 
-        "New Switheroo name",
+        "New BlooSwitch name",
         false,
         ""
     )
@@ -523,7 +523,7 @@ $("body").on("click", ".roooutput", function(){
     navigator.notification.prompt(
         "Duration to stay on in Milliseconds.  Leave as 0 to toggle", 
         roo.saveOutput, 
-        "Switheroo Output Setting",
+        "BlooSwitch Output Setting",
         false,
         "0"
     )
