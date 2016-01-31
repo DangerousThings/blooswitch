@@ -1,15 +1,15 @@
 # BlooSwitch
 
-    cordova platform add android
+    cordova -d platform add android
     
-    cordova plugin add cordova-plugin-whitelist
-    cordova plugin add cordova-plugin-ble-central
-    cordova plugin add cordova-plugin-dialogs
-    cordova plugin add cordova-plugin-camera
+    cordova -d plugin add cordova-plugin-whitelist
+    cordova -d plugin add cordova-plugin-ble-central
+    cordova -d plugin add cordova-plugin-dialogs
+    cordova -d plugin add cordova-plugin-camera
     
-    cordova build android --debug
+    cordova -d build android --debug
 
-    cordova build android --release
+    cordova -d build android --release
     
     pushd platforms/android/build/outputs/apk
     
