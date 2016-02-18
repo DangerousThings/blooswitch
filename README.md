@@ -1,15 +1,15 @@
 # BlooSwitch
 
-    cordova -d platform add android
-    
     cordova -d plugin add cordova-plugin-whitelist
     cordova -d plugin add cordova-plugin-ble-central
     cordova -d plugin add cordova-plugin-dialogs
     cordova -d plugin add cordova-plugin-camera
-    
-    cordova -d build android --debug
 
-    cordova -d build android --release
+## Android
+
+    cordova -d platform add android
+    
+    cordova -d build android # --release
     
     pushd platforms/android/build/outputs/apk
     
@@ -19,3 +19,9 @@
     zipalign -v 4 android-release-unaligned.apk android-release.apk
     
     popd
+
+## iOS
+
+    cordova -d platform add ios
+    
+    cordova -d build ios # --release
