@@ -432,7 +432,7 @@ function handleError(e){
     alert("Error" + e)
 }
 
-$("body").on("click", ".switches > .port > .switch", function(){
+$("body").on("touchstart", ".switches > .port > .switch", function(){
     var type = $(this).data("type"); // on or off
     var port = $(this).data("port"); // 1-->4
     var id = roo.id;
@@ -448,12 +448,12 @@ $("body").on("click", ".switches > .port > .switch", function(){
     }
 });
 
-$("body").on("click", "#inrange .blooswitch", function(){
+$("body").on("touchstart", "#inrange .blooswitch", function(){
     var id = $(this).data("blooswitchid");
     roo.displayBlooSwitch(id);
 });
 
-$("body").on("click", "#outofrange .blooswitch", function(){
+$("body").on("touchstart", "#outofrange .blooswitch", function(){
     console.log("trying to bring out of range device into range");
     app.bleScan();
 });
@@ -466,17 +466,17 @@ function fakeData(){
     roo.displayBlooSwitches();
 }
 
-$("body").on("click", ".topbar > .settings", function(){
+$("body").on("touchstart", ".topbar > .settings", function(){
     console.log("showing settings");
     roo.displaySettings();
 });
 
-$("body").on("click", ".delete", function(){
+$("body").on("touchstart", ".delete", function(){
     console.log("deleting blooswitch", roo.id);
     roo.delete(roo.id);
 });
 
-$("body").on("click", ".back", function(){
+$("body").on("touchstart", ".back", function(){
     console.log("going back");
     handleBack();
 });
@@ -495,7 +495,7 @@ function handleBack(){
     }
 }
 
-$("body").on("click", ".rooname", function(){
+$("body").on("touchstart", ".rooname", function(){
     navigator.notification.prompt(
         "Provide a new BlooSwitch name",
         roo.saveName, 
@@ -505,7 +505,7 @@ $("body").on("click", ".rooname", function(){
     )
 });
 
-$("body").on("click", ".rooimage", function(){
+$("body").on("touchstart", ".rooimage", function(){
     navigator.camera.getPicture(
         roo.saveImage, 
         function(){
@@ -517,7 +517,7 @@ $("body").on("click", ".rooimage", function(){
     )
 });
 
-$("body").on("click", ".roooutput", function(){
+$("body").on("touchstart", ".roooutput", function(){
     roo.port = $(this).data("port");
     console.log(roo.port);
     navigator.notification.prompt(
@@ -529,7 +529,7 @@ $("body").on("click", ".roooutput", function(){
     )
 });
 
-$("body").on("click", ".scanCont", function(){
+$("body").on("touchstart", ".scanCont", function(){
     // Performing a scan
     app.bleScan();
 });
